@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS user(
   oauth_uid varchar(255) NOT NULL DEFAULT '' COMMENT 'oauth2 uid',
   oauth_via varchar(32) NOT NULL DEFAULT '' COMMENT 'oauth2 来源',
   alipay_account varchar(64) NOT NULL DEFAULT '' COMMENT '支付宝帐号',
-  add_time  DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '商品添加时间',
+  add_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '帐号添加时间',
   PRIMARY KEY (user_id),
   UNIQUE index  oauth_uid (oauth_uid, oauth_via)
   )ENGINE=InnoDB  DEFAULT CHARSET=utf8;

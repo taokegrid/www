@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS  product (
   volume int(11) NOT NULL DEFAULT 0 COMMENT '月销量',
   hot int(11) NOT NULL  DEFAULT 0 COMMENT '商品热度',
   sellernick varchar(60) NOT NULL DEFAULT ''  COMMENT '卖主称谓',
-  add_time  DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '商品添加时间',
+  add_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '商品添加时间',
   PRIMARY KEY (product_id),
   UNIQUE INDEX taobao_id (taobao_id)
   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
