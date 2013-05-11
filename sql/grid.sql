@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS  grid(
   title varchar(255) NOT NULL DEFAULT '' COMMENT 'SEO标题',
   keywords varchar(255) NOT NULL DEFAULT '' COMMENT 'SEO关键词',
   description varchar(255) NOT NULL DEFAULT '' COMMENT 'SEO描述',
-  add_time  DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '格子添加时间',
+  add_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '格子添加时间',
   PRIMARY KEY (grid_id)
   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
