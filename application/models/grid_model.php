@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /* 
- * 用户相关操作接口
+ * 格子相关操作接口
  */
 class grid_model extends CI_Model
 {
@@ -58,6 +58,7 @@ class grid_model extends CI_Model
 	{
 		$this->db->where('grid_id', $grid_id);
 		$this->db->update($this->grid_table, $data); 
+		return ($this->db->affected_rows() > 0);
 	}
 
 	public function get_grid_click($grid_id)
@@ -73,13 +74,13 @@ class grid_model extends CI_Model
 		}
 
 		// get the sum of clicks.
-		$this->db->select_sum('click');
+		$this->db->select('SUM(click) as sum');
 		$this->db->from($this->product_table);
 		$this->db->where_in('product_id', $product_ids);
 		$query = $this->db->get();
 		if($query->num_rows() > 0){
-			$sum_click = $query->row_array();
-			return $sum_click[0];
+			$row = $query->row();
+			return $row->sum;
 		}
 		return 0;
 	}
@@ -101,19 +102,14 @@ class grid_model extends CI_Model
 		$query = $this->db->get();
 		$grid_ids= $query->result_array();
 		if($query->num_rows() == 0){
-			return null;
+			return  array();
 		}
 
-		// get the sum of clicks.
 		$this->db->select('*');
 		$this->db->from($this->grid_table);
 		$this->db->where_in('grid_id', $grid_ids);
 		$query = $this->db->get();
-		$grid_info= $query->result_array();
-		if($query->num_rows() > 0){
-			return $grid_info;
-		}
-		return  null;
+		return $query->result_array();
 	}
 
 	public function get_products_by_grid($grid_id)
@@ -125,7 +121,7 @@ class grid_model extends CI_Model
 		$query = $this->db->get();
 		$product_ids= $query->result_array();
 		if($query->num_rows() == 0){
-			return null;
+			return  array();
 		}
 
 		// get the product info
@@ -133,11 +129,7 @@ class grid_model extends CI_Model
 		$this->db->from($this->product_table);
 		$this->db->where_in('product_id', $product_ids);
 		$query = $this->db->get();
-		$product_info = $query->result_array();
-		if($query->num_rows() > 0){
-			return $product_info;
-		}
-		return null;
+		return $query->result_array();
 	}
 
 	public function get_grid_by_user($user_id)
@@ -147,18 +139,14 @@ class grid_model extends CI_Model
 		$this->db->from($this->user_product_table);
 		$this->db->where('user_id', $user_id);
 		$query = $this->db->get();
-		if($query->num_rows() > 0){
-			return $query->result_array();
-		}
-
-		return null;
+		return $query->result_array();
 	}
 
 	public function get_products_by_user($user_id)
 	{
 		$grid_ids = $this->get_grid_by_user($user_id);
 		if(empty($grid_ids)){
-			return null;
+			return  array();
 		}
 
 		foreach ($grid_ids as $grid_id){
