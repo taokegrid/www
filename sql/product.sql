@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS  product (
   description varchar(255) NOT NULL DEFAULT '' COMMENT 'SEO描述',
   notes text NOT NULL DEFAULT '' COMMENT '商品简述',
   status int(3)  NOT NULL DEFAULT 0 COMMENT '商品状态',
-  cid int(10)  NOT NULL DEFAULT 0 COMMENT '商品淘宝分类',
   visit int(11) NOT NULL DEFAULT 0 COMMENT '浏览次数',
   click int(11) NOT NULL DEFAULT 0 COMMENT '点击次数',
   volume int(11) NOT NULL DEFAULT 0 COMMENT '月销量',
