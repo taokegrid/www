@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS  product (
   title varchar(255) NOT NULL DEFAULT '' COMMENT 'SEO标题',
   keywords varchar(255) NOT NULL DEFAULT '' COMMENT 'SEO关键词',
   description varchar(255) NOT NULL DEFAULT '' COMMENT 'SEO描述',
-  notes varchar(255) NOT NULL DEFAULT '' COMMENT '商品简述',
+  notes text NOT NULL DEFAULT '' COMMENT '商品简述',
   status int(3)  NOT NULL DEFAULT 0 COMMENT '商品状态',
   cid int(10)  NOT NULL DEFAULT 0 COMMENT '商品淘宝分类',
   visit int(11) NOT NULL DEFAULT 0 COMMENT '浏览次数',
@@ -23,4 +23,4 @@ CREATE TABLE IF NOT EXISTS  product (
   add_time  DATETIME  NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '商品添加时间',
   PRIMARY KEY (product_id),
   UNIQUE INDEX taobao_id (taobao_id)
-  );
+  ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

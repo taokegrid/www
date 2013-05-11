@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS user_product(
   product_id int(11) NOT NULL DEFAULT 0 COMMENT '商品id',
   KEY (user_id),
   INDEX grid_id(user_id,grid_id)
-  );
+  )ENGINE=InnoDB  DEFAULT CHARSET=utf8;
