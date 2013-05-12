@@ -5,14 +5,15 @@
  */
 class grid_model extends CI_Model
 {
+	var $max_grids_in_user = 5;
 	var $grid_table = '';
-	var $user_product_table= '';
+	var $user_grid_table= '';
 	var $product_table= '';
 	public function __construct()
 	{
 		parent::__construct();
 		$this->grid_table = $this->db->dbprefix('grid');
-		$this->user_product_table = $this->db->dbprefix('user_product');
+		$this->user_grid_table = $this->db->dbprefix('user_grid');
 		$this->product_table = $this->db->dbprefix('product');
 	}
 
@@ -25,6 +26,7 @@ class grid_model extends CI_Model
 		return  $query->result_array();
 	}
 
+
 	public function is_grid_exist($name)
 	{
 		$this->db->select('*');
@@ -34,7 +36,7 @@ class grid_model extends CI_Model
 		return ($query->num_rows() == 1);
 	}
 
-	public function  add_new_grid($name, $data)
+	public function  add_grid($user_id, $data)
 	{
 		if(!isset($data['name'])){
 			return false;
@@ -43,8 +45,18 @@ class grid_model extends CI_Model
 		if($this->is_grid_exist($data['name'])) {
 			return false;
 		}
+		if($this->has_too_many_grids($user_id)){
+			return false;
+		}
 
 		$this->db->insert($this->grid_table, $data);
+		$grid_id=$this->db->insert_id();
+
+		$user_grid_data = array(
+			'user_id' => $user_id,
+			'grid_id' => $grid_id
+		);
+		$this->db->insert($this->user_grid_table, $user_grid_data);
 		return ($this->db->affected_rows() > 0);
 	}
 
@@ -61,42 +73,16 @@ class grid_model extends CI_Model
 		return ($this->db->affected_rows() > 0);
 	}
 
-	public function get_grid_click($grid_id)
-	{
-		// get the product_ids in the grid.
-		$this->db->select('product_id');
-		$this->db->from($this->user_product_table);
-		$this->db->where('grid_id', $grid_id);
-		$query = $this->db->get();
-		$product_ids= $query->result_array();
-		if($query->num_rows() == 0){
-			return 0;
-		}
 
-		// get the sum of clicks.
-		$this->db->select('SUM(click) as sum');
-		$this->db->from($this->product_table);
-		$this->db->where_in('product_id', $product_ids);
-		$query = $this->db->get();
-		if($query->num_rows() > 0){
-			$row = $query->row();
-			return $row->sum;
-		}
-		return 0;
+	public function get_hotest_grid($limit = 10)
+	{
+		// 热门格子的定义;  商品hot值总和
 	}
 
-	public function get_hot_grid($userid = '')
+	public function get_newest_grid($limit = 10)
 	{
-	}
-
-	public function get_newest_grid($limit = 10, $userid ='')
-	{
-		// get the product_ids in the grid.
 		$this->db->select($grid_id);
-		$this->db->from($this->user_product_table);
-		if(isset($userid)){
-		$this->db->where('user_id', $userid);
-		}
+		$this->db->from($this->user_grid_table);
 		$this->db->order_by("add_time", "desc"); 
 		$this->db->limit($limit);
 		$query = $this->db->get();
@@ -112,31 +98,12 @@ class grid_model extends CI_Model
 		return $query->result_array();
 	}
 
-	public function get_products_by_grid($grid_id)
-	{
-		// get the product_ids in the grid.
-		$this->db->select('product_id');
-		$this->db->from($this->user_product_table);
-		$this->db->where('grid_id', $grid_id);
-		$query = $this->db->get();
-		$product_ids= $query->result_array();
-		if($query->num_rows() == 0){
-			return  array();
-		}
-
-		// get the product info
-		$this->db->select('*');
-		$this->db->from($this->product_table);
-		$this->db->where_in('product_id', $product_ids);
-		$query = $this->db->get();
-		return $query->result_array();
-	}
 
 	public function get_grid_by_user($user_id)
 	{
 		// get the grids in the grid.
 		$this->db->select('grid_id');
-		$this->db->from($this->user_product_table);
+		$this->db->from($this->user_grid_table);
 		$this->db->where('user_id', $user_id);
 		$query = $this->db->get();
 		return $query->result_array();
@@ -149,10 +116,24 @@ class grid_model extends CI_Model
 			return  array();
 		}
 
+		$result = array();
 		foreach ($grid_ids as $grid_id){
 			$result[$grid_id]["grid_info"]  = $this->get_grid_info($grid_id);
 			$result[$grid_id]["product"] = $this->get_products_by_grid($grid_id);
 		}
 		return $result;
+	}
+
+	public function has_too_many_grids($user_id)
+	{
+		$this->db->select('COUNT(1) as count');
+		$this->db->from($this->user_grid_table);
+		$this->db->where_in('user_id', $user_id);
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			$row = $query->row();
+			return ($row->count > $max_grids_in_user);
+		}
+		return false;
 	}
 }
