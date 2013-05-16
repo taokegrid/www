@@ -1,0 +1,17 @@
+.home {background: url('img/pattern.png') repeat;}
+
+/*头部*/
+#header {text-align: center;height: 130px; color:#fff;text-shadow: 0 2px 2px #000;}
+#header h1 {font-weight: normal;}
+#header h1 a {text-decoration: none; color:#fff;}
+#header .description {font-size:12px;color:#ddd;}
+
+/*卡片列表*/
+#card-list {width:900px;margin:0 auto;}
+
+.card-stack {padding:33px;text-align: center;width:150px;float:left;
+  overflow: hidden;background: url('img/card-stack.png') no-repeat;text-shadow: 0 2px 2px #000;}
+.card-stack .card-cover {display: block;height:150px;width:150px;margin-bottom:30px;} 
+.card-stack .card-title {margin:0;}
+.card-stack .card-title a {color:#ddd;font-weight: normal;text-decoration: none;}
+.card-stack .card-desc {color:#888;font-size: 12px;}
