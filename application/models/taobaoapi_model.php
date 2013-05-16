@@ -70,4 +70,17 @@ class Taobaoke_model extends CI_Model{
 		$req->setCid($cid);
 		return $c->execute($req);
 	}
+
+	// 必须为淘宝帐号推广
+	function get_bill_report(){
+		$c = new TopClient;
+		$c->appkey = APPKEY;
+		$c->secretKey = SECRETKEY;
+		$req = new TaobaokeReportGetRequest;
+		$req->setFields("trade_id,pay_time,pay_price,commission,outer_code,item_title");
+		$req->setDate("20090520");
+		$req->setPageNo(1);
+		$req->setPageSize(100);
+		$resp = $c->execute($req);
+	}
 }

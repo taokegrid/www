@@ -9,6 +9,7 @@ class User_model extends CI_Model
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->database();
 		$this->user_table = $this->db->dbprefix('user');
 	}
 
@@ -48,17 +49,6 @@ class User_model extends CI_Model
         return null;
 	}
 
-	public function get_user_info2($user_id)
-	{
-		$this->db->select('*');
-		$this->db->from($this->user_table);
-		$this->db->where('user_id', $user_id);
-		$query = $this->db->get();
-		if ($query->num_rows() > 0) {
-			return $query->row_array();
-		}
-		return null;
-	}
 
 	public  function get_newest_user($limit)
 	{
@@ -89,5 +79,17 @@ class User_model extends CI_Model
 			$result[$user_id]["info"] = $this->get_user_info2($user_id);
 		}
 		return $result;
+	}
+
+	private function get_user_info2($user_id)
+	{
+		$this->db->select('*');
+		$this->db->from($this->user_table);
+		$this->db->where('user_id', $user_id);
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			return $query->row_array();
+		}
+		return null;
 	}
 }

@@ -3,18 +3,16 @@
 /* 
  * 格子相关操作接口
  */
-class grid_model extends CI_Model
+class Grid_model extends CI_Model
 {
 	var $max_grids_in_user = 5;
 	var $grid_table = '';
 	var $user_grid_table= '';
-	var $product_table= '';
 	public function __construct()
 	{
 		parent::__construct();
 		$this->grid_table = $this->db->dbprefix('grid');
 		$this->user_grid_table = $this->db->dbprefix('user_grid');
-		$this->product_table = $this->db->dbprefix('product');
 	}
 
 	public function get_grid_info($grid_id)
@@ -136,4 +134,5 @@ class grid_model extends CI_Model
 		}
 		return false;
 	}
+
 }

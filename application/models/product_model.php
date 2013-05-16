@@ -8,11 +8,13 @@ class Product_model extends CI_Model
 	var $max_products_in_grid =20;
 	var $product_table= '';
 	var $grid_product_table= '';
+	var $user_g= '';
 	public function __construct()
 	{
 		parent::__construct();
 		$this->product_table = $this->db->dbprefix('product');
 		$this->grid_product_table = $this->db->dbprefix('grid_product');
+		$this->user_grid_table= $this->db->dbprefix('user_grid');
 	}
 
 	public function get_newest_product($limit = 10)
@@ -132,6 +134,7 @@ class Product_model extends CI_Model
 		}
 		return 0;
 	}
+
 	public function get_relate_grid($cid)
 	{
 		$this->db->select("grid");
@@ -139,5 +142,17 @@ class Product_model extends CI_Model
 		$ths->db->where('cid', $cid);
 		$this->db->get();
 		return $query->result_array();
+	}
+
+	public function get_owner_of_product($product_id)
+	{
+		$sql = "SELECT user_id FROM $this->user_grid_table a, $this->grid_product_table b \
+				WHERE a.grid_id=b.grid_id AND b.product_id = $product_id "
+		$query = $this->db->query($sql);
+		if($query->num_rows() > 0){
+			$row = $query->row();
+			return $row->user_id;
+		}
+		return 0;
 	}
 }
